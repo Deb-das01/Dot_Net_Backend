@@ -1,0 +1,93 @@
+Day34(26th August, 2025)
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+
+React App				---------->							ASP.NET CORE API
+
+
+
+Login  Page  (UI)   		----		 
+					http://localhost:465456/api/Users
+							{ userid , password }
+					
+																			----  Verify uid, pwd   
+get and store the token 		<-----				Send token to client app..	
+
+
+---------------------------------------------------
+Request Url
+				http://localhost:465456/api/Products
+	
+Request Headers:			
+			Token 	:    jaskdf6asdf-asdf4sd6fs-adfsdfdsf545
+	
+-----------------------------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+JWT Details (appseetings.json)
+		a.  Add Authentication details in Program.cs
+		b.  Generate token 
+		
+		
+		
+		
+		
+UserModel userObj = 	usersList.Where(x => x.UserName ==
+requestUser.UserName && x.Password == requestUser.Password).FirstOrDefault();
+
+
+
+
+
+
+Access current user details in the controller action  methods:
+		 var  user = HttpContext.User;
+		 string str = user.Identity?.Name;
+		 var roles =  user.FindAll(ClaimTypes.Role).ToList();   
+		 
+ --------------------------------------------------------
+ 
+ 
+ Configure swagger for integrating authorization tokens along with request:
+ 
+  
+builder.Services.AddSwaggerGen(opt =>
+{
+    opt.SwaggerDoc("v1", new OpenApiInfo { Title = "MyAPI", Version = "v1" });
+    opt.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        In = ParameterLocation.Header,
+        Description = "Please enter token",
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        BearerFormat = "JWT",
+        Scheme = "bearer"
+    });
+
+    opt.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference
+                {
+                    Type=ReferenceType.SecurityScheme,
+                    Id="Bearer"
+                }
+            },
+            new string[]{}
+        }
+    });
+});
+ 
+
+ 
+		 
